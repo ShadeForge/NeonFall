@@ -1,0 +1,21 @@
+<component name="ArtifactManager">
+  <artifact name="NeonFall:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/NeonFall_jar</output-path>
+    <root id="root">
+      <element id="archive" name="NeonFall.jar">
+        <element id="module-output" name="NeonFall" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/libs/jars/jl1.0.1.jar" path-in-jar="/" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/libs/jars/joml-1.6.1-20150920.093049-3.jar" path-in-jar="/" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/libs/jars/lwjgl.jar" path-in-jar="/" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/libs/jars/mp3spi1.9.5.jar" path-in-jar="/" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/libs/jars/PNGDecoder.jar" path-in-jar="/" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/libs/jars/src.zip" path-in-jar="/" />
+        <element id="extracted-dir" path="$PROJECT_DIR$/libs/jars/tritonus_share.jar" path-in-jar="/" />
+        <element id="dir-copy" path="$PROJECT_DIR$/libs/natives" />
+      </element>
+      <element id="directory" name="res">
+        <element id="dir-copy" path="$PROJECT_DIR$/res" />
+      </element>
+    </root>
+  </artifact>
+</component>

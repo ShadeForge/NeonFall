@@ -26,11 +26,11 @@ public class FreeFallChargeBar
         GL11.glBindTexture(3553, this.tex_id);
         GL11.glBegin(7);
         GL11.glTexCoord2f(0.0f, 1.0f);
-        GL11.glVertex2f(-1.0f, 0.95f);
+        GL11.glVertex2f(-1.0f, 1.0f - CHARGE_BAR_HEIGHT);
         GL11.glTexCoord2f(1.0f, 1.0f);
-        GL11.glVertex2f(this.player.getFreefallCharge() / 50.0f * 0.75f - 1.0f, 0.95f);
+        GL11.glVertex2f(this.player.getFreefallCharge() / 50.0f * CHARGE_BAR_WIDTH - 1.0f, 1.0f - CHARGE_BAR_HEIGHT);
         GL11.glTexCoord2f(1.0f, 0.0f);
-        GL11.glVertex2f(this.player.getFreefallCharge() / 50.0f * 0.75f - 1.0f, 1.0f);
+        GL11.glVertex2f(this.player.getFreefallCharge() / 50.0f * CHARGE_BAR_WIDTH - 1.0f, 1.0f);
         GL11.glTexCoord2f(0.0f, 0.0f);
         GL11.glVertex2f(-1.0f, 1.0f);
         GL11.glEnd();
