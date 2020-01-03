@@ -7,46 +7,94 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2dfe224-842f-44f2-a311-6eee87e7f236" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/NeonFall_jar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/jars1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/javadoc.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NeonFall.iml" beforeDir="false" afterPath="$PROJECT_DIR$/NeonFall.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NeonFall/META-INF/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Scene/GUI/FreeFallChargeBar.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Scene/GUI/FreeFallChargeBar.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/fonts/0.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/fonts/1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/fonts/2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/fonts/3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/fonts/4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/fonts/5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/fonts/6.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/fonts/7.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/fonts/8.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/fonts/9.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/fonts/credits.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/fonts/exit.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/fonts/font.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/fonts/highscore.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/fonts/start.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/meshes/cube.mtl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/meshes/cube.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/meshes/cube.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/meshes/cube_old.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/meshes/cube_texture.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/meshes/ship.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/meshes/ship.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/meshes/white.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/music/02.Dance With The Dead-Eyes of Madness.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/shaders/blur_frag.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/shaders/glow_frag.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/shaders/image_vert.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/shaders/main_frag.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/shaders/main_vert.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/shaders/text_frag.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/shaders/text_vert.glsl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/NeonFall/Scene/GUI/FreeFallChargeBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/NeonFall/Scene/GUI/FreeFallChargeBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/NeonFall.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/fonts/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/fonts/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/fonts/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/fonts/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/fonts/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/fonts/5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/fonts/6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/fonts/7.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/fonts/8.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/fonts/9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/fonts/credits.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/fonts/exit.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/fonts/font.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/fonts/highscore.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/fonts/start.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/meshes/cube.mtl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/meshes/cube.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/meshes/cube.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/meshes/cube_old.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/meshes/cube_texture.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/meshes/ship.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/meshes/ship.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/meshes/white.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/music/02.Dance With The Dead-Eyes of Madness.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/shaders/blur_frag.glsl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/shaders/glow_frag.glsl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/shaders/image_vert.glsl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/shaders/main_frag.glsl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/shaders/main_vert.glsl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/shaders/text_frag.glsl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NeonFall_jar/res/shaders/text_vert.glsl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/MainGame$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/MainGame.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Manager/DisplayManager$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Manager/DisplayManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Manager/InputManager$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Manager/InputManager$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Manager/InputManager$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Manager/InputManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Manager/ResourceManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Manager/SoundManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Physics/AABB.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Rendering/Camera.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Rendering/MSTextureBuffer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Rendering/Renderer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Rendering/Shader/BlurShaderProgram.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Rendering/Shader/GlowShaderProgram.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Rendering/Shader/PassShaderProgram.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Rendering/Shader/ShaderProgram.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Rendering/Shader/StaticShaderProgram.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Rendering/TextureBuffer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Resources/BitmapFont.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Resources/Model/Loader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Resources/Model/Material.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Resources/Model/OBJLoader$Triangle.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Resources/Model/OBJLoader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Resources/Model/RawModel.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Resources/Model/StaticLoader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Resources/Sounds/MusicPlayer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Resources/Sounds/Sound.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Resources/Sounds/SoundThread.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Resources/Sounds/SpectrumSoundListener$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Resources/Sounds/SpectrumSoundListener$Band.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Resources/Sounds/SpectrumSoundListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Resources/Sounds/SpectrumSoundThread.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Resources/Texture/ModelTexture.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Scene/GUI/Button.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Scene/GUI/FreeFallChargeBar.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Scene/GUI/IButtonActionListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Scene/GUI/SpectrumBar.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Scene/GUI/SpectrumBarsBackground.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Scene/GUI/SpectrumButton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Scene/GameScene.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Scene/MainMenuScene.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Scene/Scene$SCENE_TYPE.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Scene/Scene.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/Scene/TestScene.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/World/Entities/BarEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/World/Entities/Entity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/World/Entities/Player.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/World/Entities/TexturedEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/World/RoundData.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/NeonFall/NeonFall/World/WorldGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/music/02.Dance With The Dead-Eyes of Madness.mp3" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -71,7 +119,7 @@
         <entry file="file://$PROJECT_DIR$/src/NeonFall/MainGame.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="340">
-              <caret line="37" column="58" lean-forward="true" selection-start-line="37" selection-start-column="58" selection-end-line="37" selection-end-column="58" />
+              <caret line="37" column="58" selection-start-line="37" selection-start-column="58" selection-end-line="37" selection-end-column="58" />
             </state>
           </provider>
         </entry>
@@ -114,8 +162,8 @@
       <file leaf-file-name="StaticLoader.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/NeonFall/Resources/Model/StaticLoader.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="25" column="51" lean-forward="true" selection-start-line="25" selection-start-column="51" selection-end-line="25" selection-end-column="51" />
+            <state relative-caret-position="425">
+              <caret line="27" column="5" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -196,8 +244,8 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1744" />
-    <option name="y" value="127" />
+    <option name="x" value="-1672" />
+    <option name="y" value="281" />
     <option name="width" value="1400" />
     <option name="height" value="984" />
   </component>
@@ -213,17 +261,6 @@
             <path>
               <item name="NeonFall" type="b2602c69:ProjectViewProjectNode" />
               <item name="NeonFall" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="NeonFall" type="b2602c69:ProjectViewProjectNode" />
-              <item name="NeonFall" type="462c0819:PsiDirectoryNode" />
-              <item name="out" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="NeonFall" type="b2602c69:ProjectViewProjectNode" />
-              <item name="NeonFall" type="462c0819:PsiDirectoryNode" />
-              <item name="out" type="462c0819:PsiDirectoryNode" />
-              <item name="production" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="NeonFall" type="b2602c69:ProjectViewProjectNode" />
@@ -414,16 +451,15 @@
       <updated>1578069697406</updated>
       <workItem from="1578069701516" duration="1347000" />
       <workItem from="1578071070353" duration="3352000" />
-      <workItem from="1578082894241" duration="5077000" />
+      <workItem from="1578082894241" duration="6311000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9776000" />
+    <option name="totallyTimeSpent" value="11010000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1928" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <frame x="-1672" y="281" width="1400" height="984" extended-state="0" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -435,11 +471,11 @@
       <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32943678" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.35673186" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18020834" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -781,7 +817,7 @@
     <entry file="file://$PROJECT_DIR$/src/NeonFall/MainGame.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
-          <caret line="37" column="58" lean-forward="true" selection-start-line="37" selection-start-column="58" selection-end-line="37" selection-end-column="58" />
+          <caret line="37" column="58" selection-start-line="37" selection-start-column="58" selection-end-line="37" selection-end-column="58" />
         </state>
       </provider>
     </entry>
@@ -835,8 +871,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/NeonFall/Resources/Model/StaticLoader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="25" column="51" lean-forward="true" selection-start-line="25" selection-start-column="51" selection-end-line="25" selection-end-column="51" />
+        <state relative-caret-position="425">
+          <caret line="27" column="5" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
         </state>
       </provider>
     </entry>
@@ -859,7 +895,7 @@
       </state>
       <state key="FacetStructureConfigurable.UI">
         <settings>
-          <last-edited>No facets are configured</last-edited>
+          <last-edited />
           <splitter-proportions>
             <option name="proportions">
               <list>
