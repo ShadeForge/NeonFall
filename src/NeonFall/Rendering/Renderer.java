@@ -1,205 +1,164 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
 package NeonFall.Rendering;
 
-import NeonFall.World.Entities.Entity;
+import org.lwjgl.opengl.GL13;
 import NeonFall.World.Entities.TexturedEntity;
-import NeonFall.Manager.DisplayManager;
-import NeonFall.Manager.ResourceManager;
-import NeonFall.Rendering.Shader.BlurShaderProgram;
-import NeonFall.Rendering.Shader.GlowShaderProgram;
-import NeonFall.Rendering.Shader.StaticShaderProgram;
-import NeonFall.Resources.Model.RawModel;
+import NeonFall.World.Entities.Entity;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 import NeonFall.Scene.Scene;
+import NeonFall.Manager.DisplayManager;
+import org.lwjgl.opengl.GL11;
+import NeonFall.Manager.ResourceManager;
 import org.joml.Vector3f;
+import NeonFall.Resources.Model.RawModel;
+import NeonFall.Rendering.Shader.PassShaderProgram;
+import NeonFall.Rendering.Shader.GlowShaderProgram;
+import NeonFall.Rendering.Shader.BlurShaderProgram;
+import NeonFall.Rendering.Shader.StaticShaderProgram;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
-
-/**
- * Usage:
- * Author: lbald
- * Last Update: 30.12.2015
- */
-public class Renderer {
-
-    private final static int DEFAULT_MSAA_SAMPLES = 8;
-
+public class Renderer
+{
+    private static final int DEFAULT_MSAA_SAMPLES = 4;
     private StaticShaderProgram mainShader;
     private BlurShaderProgram blurShader;
     private GlowShaderProgram glowShader;
+    private PassShaderProgram passShader;
     private TextureBuffer mainBuffer;
     private TextureBuffer blurBuffer;
     private TextureBuffer glowBuffer;
     private TextureBuffer glowDepthBuffer;
+    private TextureBuffer textBuffer;
     private Camera camera;
     private RawModel surface;
     private Vector3f glowColor;
-
-    public Renderer(Camera camera) {
-        glowColor = new Vector3f(0, 1, 0);
-        mainShader = new StaticShaderProgram();
-        blurShader = new BlurShaderProgram();
-        glowShader = new GlowShaderProgram();
-        this.surface = ResourceManager.getModel(ResourceManager.SURFACE_MODEL_NAME);
+    
+    public Renderer(final Camera camera) {
+        this.glowColor = new Vector3f(0.0f, 1.0f, 0.0f);
+        this.mainShader = new StaticShaderProgram();
+        this.blurShader = new BlurShaderProgram();
+        this.glowShader = new GlowShaderProgram();
+        this.passShader = new PassShaderProgram();
+        this.surface = ResourceManager.getModel("Surface_Model");
         this.camera = camera;
-        // set OpenGL parameters for rendering
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-
-        initBuffers(DisplayManager.getWidth(), DisplayManager.getHeight());
+        GL11.glEnable(2884);
+        GL11.glCullFace(1029);
+        this.initBuffers(DisplayManager.getWidth(), DisplayManager.getHeight());
     }
-
-    private void initBuffers(int width, int height) {
-        mainBuffer = new MSTextureBuffer(width, height, DEFAULT_MSAA_SAMPLES);
-        glowBuffer = new MSTextureBuffer(width, height, DEFAULT_MSAA_SAMPLES);
-        blurBuffer = new TextureBuffer(width, height);
-        glowDepthBuffer = new TextureBuffer(width, height);
+    
+    private void initBuffers(final int width, final int height) {
+        this.mainBuffer = new MSTextureBuffer(width, height, 4);
+        this.glowBuffer = new MSTextureBuffer(width, height, 4);
+        this.blurBuffer = new TextureBuffer(width, height);
+        this.glowDepthBuffer = new TextureBuffer(width, height);
+        this.textBuffer = new TextureBuffer(width, height);
     }
-
-    public void renderScene(Scene scene) {
-
-        //FrameBuffer-Initialisation
-        mainBuffer.start(GL_COLOR_ATTACHMENT0, true);
-
-        mainShader.start();
-        mainShader.loadProjectionMatrix(camera.getProjectionMatrix());
-        mainShader.loadViewMatrix(camera.getViewMatrix());
-
+    
+    public void renderScene(final Scene scene) {
+        GL11.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        this.mainBuffer.start(36064, true);
+        this.mainShader.start();
+        this.mainShader.loadProjectionMatrix(this.camera.getProjectionMatrix());
+        this.mainShader.loadViewMatrix(this.camera.getViewMatrix());
         scene.draw();
-
-        mainBuffer.stop();
-
-        glowBuffer.start(GL_COLOR_ATTACHMENT0, true);
-
-        glColorMask(false, false, false, false);
+        this.mainBuffer.stop();
+        this.glowBuffer.start(36064, true);
+        GL11.glColorMask(false, false, false, false);
         scene.drawNoneLightEntities();
-
-        glColorMask(true, true, true, true);
+        GL11.glColorMask(true, true, true, true);
         scene.drawLights();
-
-        glowBuffer.stop();
-
-        mainShader.stop();
-
-        blurShader.start();
-
-        blurShader.loadTexture();
-
-        blurBuffer.start(GL_COLOR_ATTACHMENT0, false);
-
-        glowBuffer.activateTexture(GL_TEXTURE0);
-
-        for(int i = 0; i < 4; i++) {
-
-            blurShader.loadOrientation(i%2);
-
-            renderFullScreenTexture();
-
-            blurBuffer.activateTexture(GL_TEXTURE0);
+        this.glowBuffer.stop();
+        this.mainShader.stop();
+        this.blurShader.start();
+        this.blurShader.loadTexture();
+        this.blurBuffer.start(36064, false);
+        this.glowBuffer.activateTexture(33984);
+        for (int i = 0; i < 4; ++i) {
+            this.blurShader.loadOrientation(i % 2);
+            this.renderFullScreenTexture();
+            this.blurBuffer.activateTexture(33984);
         }
-
-        blurBuffer.stop();
-
-        blurShader.stop();
-
-        glowShader.start();
-
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-        mainBuffer.activateTexture(GL_TEXTURE0);
-        blurBuffer.activateTexture(GL_TEXTURE1);
-
-        glowShader.loadTexture();
-
-        renderFullScreenTexture();
-
-        glowShader.stop();
+        this.blurBuffer.stop();
+        this.blurShader.stop();
+        this.glowShader.start();
+        GL30.glBindFramebuffer(36160, 0);
+        GL30.glBindRenderbuffer(36161, 0);
+        this.mainBuffer.activateTexture(33984);
+        this.blurBuffer.activateTexture(33985);
+        this.glowShader.loadTexture();
+        this.renderFullScreenTexture();
+        this.glowShader.stop();
+        this.passShader.start();
+        scene.drawGUI();
+        this.passShader.stop();
     }
-
+    
     private void renderFullScreenTexture() {
-        glBindVertexArray(surface.getVaoID());
-        glEnableVertexAttribArray(0);
-
-        glDrawElements(GL_TRIANGLES, surface.getVertexCount(), GL_UNSIGNED_INT, 0);
-
-        glDisableVertexAttribArray(0);
-        glBindVertexArray(0);
+        GL30.glBindVertexArray(this.surface.getVaoID());
+        GL20.glEnableVertexAttribArray(0);
+        GL11.glDrawElements(4, this.surface.getVertexCount(), 5125, 0L);
+        GL20.glDisableVertexAttribArray(0);
+        GL30.glBindVertexArray(0);
     }
-
-    public void renderEntity(Entity entity) {
-
-        // bind VAO and activate VBOs //
-        RawModel model = entity.getModel();
-        glBindVertexArray(model.getVaoID());
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
-        // just now we can upload the model matrix //
-        //mainShader.loadMaterial(entity.getMaterial());
-        mainShader.loadModelMatrix(entity.getModelMatrix());
-
-        // render model //
-        glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
-
-        // a good programmer should clean up //
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glBindVertexArray(0);
+    
+    public void renderEntity(final Entity entity) {
+        final RawModel model = entity.getModel();
+        GL30.glBindVertexArray(model.getVaoID());
+        GL20.glEnableVertexAttribArray(0);
+        GL20.glEnableVertexAttribArray(1);
+        this.mainShader.loadModelMatrix(entity.getModelMatrix());
+        GL11.glDrawElements(4, model.getVertexCount(), 5125, 0L);
+        GL20.glDisableVertexAttribArray(0);
+        GL20.glDisableVertexAttribArray(1);
+        GL30.glBindVertexArray(0);
     }
-
-    public void renderTexturedEntity(TexturedEntity e){
-        //mainShader.loadMaterial(e.getMaterial());
-        mainShader.loadColor(e.getColor());
-
-        // bind VAO and activate VBOs //
-        RawModel model = e.getModel();
-        glBindVertexArray(model.getVaoID());
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        glEnableVertexAttribArray(2);
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, e.getTexture().getTextureID());
-
-        // load model and projection matrix into shader //
-        mainShader.loadModelMatrix(e.getModelMatrix());
-        mainShader.loadProjectionMatrix(camera.getProjectionMatrix());
-
-        // render model //
-        glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
-
-        // a good programmer should clean up //
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(2);
-        glBindVertexArray(0);
+    
+    public void renderTexturedEntity(final TexturedEntity e) {
+        this.mainShader.loadColor(e.getColor());
+        final RawModel model = e.getModel();
+        GL30.glBindVertexArray(model.getVaoID());
+        GL20.glEnableVertexAttribArray(0);
+        GL20.glEnableVertexAttribArray(1);
+        GL20.glEnableVertexAttribArray(2);
+        GL13.glActiveTexture(33984);
+        GL11.glBindTexture(3553, e.getTexture().getTextureID());
+        this.mainShader.loadModelMatrix(e.getModelMatrix());
+        GL11.glDrawElements(4, model.getVertexCount(), 5125, 0L);
+        GL20.glDisableVertexAttribArray(0);
+        GL20.glDisableVertexAttribArray(1);
+        GL20.glDisableVertexAttribArray(2);
+        GL30.glBindVertexArray(0);
     }
-
+    
     public Vector3f getGlowColor() {
-        return glowColor;
+        return this.glowColor;
     }
-
-    public void resize(int width, int height) {
-        mainBuffer.resize(width, height);
-        glowBuffer.resize(width, height);
-        blurBuffer.resize(width, height);
-        glowDepthBuffer.resize(width, height);
+    
+    public void resize(final int width, final int height) {
+        this.mainBuffer.resize(width, height);
+        this.glowBuffer.resize(width, height);
+        this.blurBuffer.resize(width, height);
+        this.glowDepthBuffer.resize(width, height);
     }
-
+    
     public void destroy() {
-        destroyBuffers();
-        mainShader.cleanUp();
-        blurShader.cleanUp();
-        glowShader.cleanUp();
+        this.destroyBuffers();
+        this.mainShader.cleanUp();
+        this.blurShader.cleanUp();
+        this.glowShader.cleanUp();
+    }
+    
+    public void destroyBuffers() {
+        this.mainBuffer.destroy();
+        this.blurBuffer.destroy();
+        this.glowBuffer.destroy();
+        this.glowDepthBuffer.destroy();
     }
 
-    public void destroyBuffers() {
-        mainBuffer.destroy();
-        blurBuffer.destroy();
-        glowBuffer.destroy();
-        glowDepthBuffer.destroy();
+    public void setCamera(Camera camera) {
+        this.camera = camera;
     }
 }

@@ -1,82 +1,76 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
 package NeonFall.Rendering;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER;
-import static org.lwjgl.opengl.GL32.GL_TEXTURE_2D_MULTISAMPLE;
-import static org.lwjgl.opengl.GL32.glTexImage2DMultisample;
+import org.lwjgl.opengl.GL32;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
-/**
- * Usage:
- * Author: lbald
- * Last Update: 12.01.2016
- */
-public class MSTextureBuffer extends TextureBuffer {
-
+public class MSTextureBuffer extends TextureBuffer
+{
     private int msBuffer;
     private int msDepthBuffer;
     private int samples;
-
     private int msTexture;
-
-    public MSTextureBuffer(int width, int height, int samples) {
+    
+    public MSTextureBuffer(final int width, final int height, final int samples) {
         this.width = width;
         this.height = height;
         this.samples = samples;
-
-        initTextures();
-        initBuffers();
+        this.initTextures();
+        this.initBuffers();
     }
-
+    
     @Override
-    public void start(int attachment, boolean hasDepthBuffer) {
+    public void start(final int attachment, final boolean hasDepthBuffer) {
         super.start(attachment, hasDepthBuffer);
-        glBindFramebuffer(GL_FRAMEBUFFER, msBuffer);
-        glBindRenderbuffer(GL_RENDERBUFFER, depthBufferID);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D_MULTISAMPLE, msTexture, 0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        GL30.glBindFramebuffer(36160, this.msBuffer);
+        GL30.glBindRenderbuffer(36161, this.depthBufferID);
+        GL30.glFramebufferTexture2D(36160, attachment, 37120, this.msTexture, 0);
+        GL11.glClear(16640);
     }
-
+    
     @Override
     public int stop() {
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, msBuffer);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBufferID);
-        glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+        GL30.glBindFramebuffer(36008, this.msBuffer);
+        GL30.glBindFramebuffer(36009, this.frameBufferID);
+        GL30.glBlitFramebuffer(0, 0, this.width, this.height, 0, 0, this.width, this.height, 16640, 9728);
+        GL30.glBindFramebuffer(36008, 0);
+        GL30.glBindFramebuffer(36009, 0);
         return super.stop();
     }
-
+    
     @Override
     protected void initBuffers() {
         super.initBuffers();
-        msBuffer = glGenFramebuffers();
-        msDepthBuffer = glGenRenderbuffers();
-        glBindFramebuffer(GL_FRAMEBUFFER, msBuffer);
-        glBindRenderbuffer(GL_RENDERBUFFER, msDepthBuffer);
-        glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH24_STENCIL8, width, height);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, msDepthBuffer);
+        this.msBuffer = GL30.glGenFramebuffers();
+        this.msDepthBuffer = GL30.glGenRenderbuffers();
+        GL30.glBindFramebuffer(36160, this.msBuffer);
+        GL30.glBindRenderbuffer(36161, this.msDepthBuffer);
+        GL30.glRenderbufferStorageMultisample(36161, this.samples, 35056, this.width, this.height);
+        GL30.glFramebufferRenderbuffer(36160, 33306, 36161, this.msDepthBuffer);
     }
-
+    
     @Override
     protected void initTextures() {
         super.initTextures();
-        msTexture = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msTexture);
-        glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, GL_RGB, width, height, true);
-        glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+        GL11.glBindTexture(37120, this.msTexture = GL11.glGenTextures());
+        GL32.glTexImage2DMultisample(37120, this.samples, 6407, this.width, this.height, true);
+        GL11.glBindTexture(37120, 0);
     }
-
+    
     @Override
     protected void destroyBuffers() {
         super.destroyBuffers();
-        glDeleteFramebuffers(msBuffer);
-        glDeleteFramebuffers(msDepthBuffer);
+        GL30.glDeleteFramebuffers(this.msBuffer);
+        GL30.glDeleteFramebuffers(this.msDepthBuffer);
     }
-
+    
     @Override
     protected void destroyTextures() {
         super.destroyTextures();
-        glDeleteTextures(msTexture);
+        GL11.glDeleteTextures(this.msTexture);
     }
 }

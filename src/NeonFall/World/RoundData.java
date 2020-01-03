@@ -1,35 +1,32 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
 package NeonFall.World;
 
+import NeonFall.Scene.Scene;
 import NeonFall.MainGame;
+import java.nio.IntBuffer;
 import NeonFall.Manager.DisplayManager;
-import NeonFall.Manager.ResourceManager;
+import org.lwjgl.BufferUtils;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import java.util.Iterator;
 import NeonFall.Manager.SoundManager;
-import NeonFall.Rendering.Camera;
+import org.joml.Vector4f;
+import NeonFall.Manager.ResourceManager;
+import NeonFall.World.Entities.TexturedEntity;
 import NeonFall.Rendering.Renderer;
 import NeonFall.Resources.Sounds.SpectrumSoundListener;
-import NeonFall.Resources.Texture.ModelTexture;
 import NeonFall.Scene.GUI.SpectrumBarsBackground;
-import NeonFall.Scene.Scene;
+import NeonFall.Rendering.Camera;
 import NeonFall.World.Entities.BarEntity;
-import NeonFall.World.Entities.Player;
-import NeonFall.World.Entities.TexturedEntity;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-import org.lwjgl.BufferUtils;
-
-import java.nio.BufferUnderflowException;
-import java.nio.IntBuffer;
 import java.util.LinkedList;
+import org.joml.Vector2f;
+import NeonFall.World.Entities.Player;
 
-/**
- * Usage:
- * Author: lbald
- * Last Update: 14.01.2016
- */
-public class RoundData {
-
+public class RoundData
+{
     public Player player;
     public Vector2f mapSize;
     public LinkedList<BarEntity>[][] barEntities;
@@ -42,112 +39,102 @@ public class RoundData {
     private SpectrumSoundListener listener;
     private Renderer renderer;
     private TexturedEntity fontPlane;
-
-    public RoundData(Camera camera, Vector2f mapSize, Renderer renderer) {
+    
+    public RoundData(final Camera camera, final Vector2f mapSize, final Renderer renderer) {
         this.renderer = renderer;
         this.camera = camera;
         this.mapSize = mapSize;
-        this.barEntities = new LinkedList[(int) mapSize.x][(int) mapSize.y];
-        this.removing = new LinkedList<>();
+        this.barEntities = new LinkedList[(int)mapSize.x][(int)mapSize.y];
+        this.removing = new LinkedList<BarEntity>();
         this.loosed = false;
         this.score = 0;
-        this.fontPlane = new TexturedEntity(ResourceManager.PLANE_MODEL_NAME, ResourceManager.TEX_WHITE_FILE, new Vector4f(0, 1, 0, 1));
-        for(int x = 0; x < mapSize.x; x++) {
-            for(int y = 0; y < mapSize.y; y++) {
-                barEntities[x][y] = new LinkedList<>();
+        this.fontPlane = new TexturedEntity("Plane_Model", ResourceManager.TEX_WHITE_FILE, new Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
+        for (int x = 0; x < mapSize.x; ++x) {
+            for (int y = 0; y < mapSize.y; ++y) {
+                this.barEntities[x][y] = new LinkedList<BarEntity>();
             }
         }
-        listener = new SpectrumSoundListener();
-        worldGenerator = new WorldGenerator(this, listener);
-        player = new Player(this, new Vector2f((int)mapSize.x / 2, (int)mapSize.y / 2 + 1));
-        SoundManager.musicPlayer.addListener(listener);
+        this.listener = new SpectrumSoundListener();
+        this.worldGenerator = new WorldGenerator(this, this.listener);
+        this.player = new Player(this, new Vector2f((float)((int)mapSize.x / 2), (float)((int)mapSize.y / 2 + 1)));
+        SoundManager.musicPlayer.addListener(this.listener);
         SoundManager.musicPlayer.play();
-        background = new SpectrumBarsBackground(camera, listener);
+        this.background = new SpectrumBarsBackground(camera, this.listener);
     }
-
-    public void update(float delta) {
-        player.update(delta);
-
-        if(loosed) {
-            startLosing();
+    
+    public void update(final float delta) {
+        this.player.update(delta);
+        if (this.loosed) {
+            this.startLosing();
             return;
-        } else {
-            score += delta * 1000;
         }
-
-        background.update(delta);
-        for(int x = 0; x < mapSize.x; x++) {
-            for(int y = 0; y < mapSize.y; y++) {
-                for (BarEntity barEntity : barEntities[x][y]) {
+        this.score += (int)(delta * 1000.0f);
+        this.background.update(delta);
+        for (int x = 0; x < this.mapSize.x; ++x) {
+            for (int y = 0; y < this.mapSize.y; ++y) {
+                for (final BarEntity barEntity : this.barEntities[x][y]) {
                     barEntity.update(delta);
                 }
             }
         }
-        for (BarEntity remove : removing) {
-            Vector3f pos = remove.getPosition();
-            barEntities[(int)pos.x][(int)pos.y].remove(remove);
+        for (final BarEntity remove : this.removing) {
+            final Vector3f pos = remove.getPosition();
+            this.barEntities[(int)pos.x][(int)pos.y].remove(remove);
         }
-        worldGenerator.update(delta);
+        this.worldGenerator.update(delta);
     }
-
-    public void drawLights(Renderer renderer) {
-        for(int x = 0; x < mapSize.x; x++) {
-            for(int y = 0; y < mapSize.y; y++) {
-                for (BarEntity barEntity : barEntities[x][y]) {
+    
+    public void drawLights(final Renderer renderer) {
+        for (int x = 0; x < this.mapSize.x; ++x) {
+            for (int y = 0; y < this.mapSize.y; ++y) {
+                for (final BarEntity barEntity : this.barEntities[x][y]) {
                     barEntity.draw(renderer);
                 }
             }
         }
-        background.draw(renderer);
+        this.background.draw(renderer);
     }
-
-    public void drawNoneLightEntities(Renderer renderer) {
-        player.draw(renderer);
-        String temp = String.valueOf(score);
-
-        for(int i = 0; i < temp.length(); i++) {
-            Matrix4f mat = new Matrix4f();
-            Vector4f vec = new Vector4f();
-
-            IntBuffer buffer = BufferUtils.createIntBuffer(4);
+    
+    public void drawNoneLightEntities(final Renderer renderer) {
+        this.player.draw(renderer);
+        final String temp = String.valueOf(this.score);
+        for (int i = 0; i < temp.length(); ++i) {
+            final Matrix4f mat = new Matrix4f();
+            final Vector4f vec = new Vector4f();
+            final IntBuffer buffer = BufferUtils.createIntBuffer(4);
             buffer.put(0);
             buffer.put(0);
             buffer.put(DisplayManager.getWidth());
             buffer.put(DisplayManager.getHeight());
             buffer.flip();
-
-            fontPlane.setTexture(ResourceManager.getTexture(ResourceManager.getNumberTexture(Integer.parseInt(temp.substring(i, i + 1)))));
-            Matrix4f.unproject(DisplayManager.getWidth() / 2, DisplayManager.getHeight() / 2, 0, camera.getProjectionMatrix(),
-                    camera.getViewMatrix(), buffer, new Matrix4f(), vec);
+            this.fontPlane.setTexture(ResourceManager.getTexture(ResourceManager.getNumberTexture(Integer.parseInt(temp.substring(i, i + 1)))));
+            Matrix4f.unproject((float)(DisplayManager.getWidth() / 2), (float)(DisplayManager.getHeight() / 2), 0.0f, this.camera.getProjectionMatrix(), this.camera.getViewMatrix(), buffer, new Matrix4f(), vec);
             mat.translate(vec.x, vec.y, vec.z);
             mat.scale(0.1f);
-            fontPlane.getModelMatrix().set(mat);
-            //fontPlane.draw(renderer);
+            this.fontPlane.getModelMatrix().set(mat);
         }
     }
-
-    public boolean isBlocked(int x, int y) {
-
-        if(!isInMap(x, y))
+    
+    public boolean isBlocked(final int x, final int y) {
+        if (!this.isInMap(x, y)) {
             return false;
-        LinkedList<BarEntity> barEntities = this.barEntities[x][y];
-
-        if(barEntities.size() == 0)
+        }
+        final LinkedList<BarEntity> barEntities = this.barEntities[x][y];
+        if (barEntities.size() == 0) {
             return false;
-
-        BarEntity bar = barEntities.getFirst();
-
-        return bar.getPosition().z - bar.getLength() < Player.PLAYER_POSITION_Z && bar.getPosition().z + bar.getLength() > Player.PLAYER_POSITION_Z;
+        }
+        final BarEntity bar = barEntities.getFirst();
+        return bar.getPosition().z - bar.getLength() < 2.0f && bar.getPosition().z + bar.getLength() > 2.0f;
     }
-
+    
     private void startLosing() {
-        MainGame.highscore.add(score);
+        MainGame.highscore.add(this.score);
         MainGame.highscore.sort((o1, o2) -> o2.compareTo(o1));
         SoundManager.musicPlayer.stop();
-        MainGame.setScene(Scene.SCENE_TYPE.HIGHSCORE);
+        MainGame.setScene(Scene.SCENE_TYPE.MAINMENU);
     }
-
-    public boolean isInMap(int x, int y) {
-        return x >= 0 && y >= 0 && x < mapSize.x && y < mapSize.y;
+    
+    public boolean isInMap(final int x, final int y) {
+        return x >= 0 && y >= 0 && x < this.mapSize.x && y < this.mapSize.y;
     }
 }

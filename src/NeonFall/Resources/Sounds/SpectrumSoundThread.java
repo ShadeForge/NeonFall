@@ -1,89 +1,89 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
 package NeonFall.Resources.Sounds;
 
-import javax.sound.sampled.*;
+import java.util.Iterator;
+import javax.sound.sampled.LineUnavailableException;
 import java.io.IOException;
-import java.nio.ByteBuffer;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.BooleanControl;
+import javax.sound.sampled.Control;
+import javax.sound.sampled.FloatControl;
+import java.util.function.Consumer;
+import javax.sound.sampled.Line;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.AudioFormat;
 import java.nio.ByteOrder;
+import java.nio.ByteBuffer;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.LineListener;
 import java.util.ArrayList;
 
-/**
- * Usage:
- * Author: lbald
- * Last Update: 08.01.2016
- */
-public class SpectrumSoundThread extends SoundThread {
-
+public class SpectrumSoundThread extends SoundThread
+{
     private final ArrayList<LineListener> listeners;
-
-    public SpectrumSoundThread(SoundThread thread, ArrayList<LineListener> listeners, int id) {
+    
+    public SpectrumSoundThread(final SoundThread thread, final ArrayList<LineListener> listeners, final int id) {
         super(thread.audioSource, thread.state, id);
         this.listeners = listeners;
     }
-
+    
     @Override
     protected void init() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        destroy();
-        audioInputStream = AudioSystem.getAudioInputStream(audioSource);
-        audioDataLength = READ_BUFFER_SIZE;
-        audioDataBuffer = ByteBuffer.allocate(audioDataLength);
-        audioDataBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        nBytesRead = 0;
-
-        AudioFormat audioFormat = audioInputStream.getFormat();
-        audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
-                audioFormat.getSampleRate(), 16, audioFormat.getChannels(),
-                audioFormat.getChannels()*2, audioFormat.getSampleRate(), false);
-        audioInputStream = AudioSystem.getAudioInputStream(audioFormat, audioInputStream);
-
-        DataLine.Info lineInfo = new DataLine.Info(SourceDataLine.class, audioFormat, AudioSystem.NOT_SPECIFIED);
-        sourceDataLine = (SourceDataLine) AudioSystem.getLine(lineInfo);
-        int bufferSize = sourceDataLine.getBufferSize();
-
-        listeners.forEach(sourceDataLine::addLineListener);
-        sourceDataLine.open(audioFormat, bufferSize);
-
-        if (sourceDataLine.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-            gainControl = (FloatControl) sourceDataLine.getControl(FloatControl.Type.MASTER_GAIN);
+        this.destroy();
+        this.audioInputStream = AudioSystem.getAudioInputStream(this.audioSource);
+        this.audioDataLength = 4096;
+        (this.audioDataBuffer = ByteBuffer.allocate(this.audioDataLength)).order(ByteOrder.LITTLE_ENDIAN);
+        this.nBytesRead = 0;
+        AudioFormat audioFormat = this.audioInputStream.getFormat();
+        audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, audioFormat.getSampleRate(), 16, audioFormat.getChannels(), audioFormat.getChannels() * 2, audioFormat.getSampleRate(), false);
+        this.audioInputStream = AudioSystem.getAudioInputStream(audioFormat, this.audioInputStream);
+        final DataLine.Info lineInfo = new DataLine.Info(SourceDataLine.class, audioFormat, -1);
+        this.sourceDataLine = (SourceDataLine)AudioSystem.getLine(lineInfo);
+        final int bufferSize = this.sourceDataLine.getBufferSize();
+        this.listeners.forEach(this.sourceDataLine::addLineListener);
+        this.sourceDataLine.open(audioFormat, bufferSize);
+        if (this.sourceDataLine.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+            this.gainControl = (FloatControl)this.sourceDataLine.getControl(FloatControl.Type.MASTER_GAIN);
         }
-        if (sourceDataLine.isControlSupported(BooleanControl.Type.MUTE)) {
-            muteControl = (BooleanControl) sourceDataLine.getControl(BooleanControl.Type.MUTE);
+        if (this.sourceDataLine.isControlSupported(BooleanControl.Type.MUTE)) {
+            this.muteControl = (BooleanControl)this.sourceDataLine.getControl(BooleanControl.Type.MUTE);
         }
-        sourceDataLine.start();
+        this.sourceDataLine.start();
     }
-
+    
     @Override
     protected void processSound() throws IOException {
-
-        int toRead = audioDataLength;
-        int totalRead = 0;
-        while (toRead > 0 && (nBytesRead = audioInputStream.read(audioDataBuffer.array(), totalRead, toRead)) != -1) {
-            totalRead += nBytesRead;
-            toRead -= nBytesRead;
-        }
+        int toRead;
+        int totalRead;
+        for (toRead = this.audioDataLength, totalRead = 0; toRead > 0 && (this.nBytesRead = this.audioInputStream.read(this.audioDataBuffer.array(), totalRead, toRead)) != -1; totalRead += this.nBytesRead, toRead -= this.nBytesRead) {}
         if (totalRead > 0) {
-            byte[] trimBuffer = audioDataBuffer.array();
+            byte[] trimBuffer = this.audioDataBuffer.array();
             if (totalRead < trimBuffer.length) {
                 trimBuffer = new byte[totalRead];
-                System.arraycopy(audioDataBuffer.array(), 0, trimBuffer, 0, totalRead);
+                System.arraycopy(this.audioDataBuffer.array(), 0, trimBuffer, 0, totalRead);
             }
-
-            synchronized (listeners) {
-                sourceDataLine.write(trimBuffer, 0, totalRead);
-                for (LineListener listener : listeners) {
-                    if(listener instanceof SpectrumSoundListener)
+            synchronized (this.listeners) {
+                this.sourceDataLine.write(trimBuffer, 0, totalRead);
+                for (final LineListener listener : this.listeners) {
+                    if (listener instanceof SpectrumSoundListener) {
                         ((SpectrumSoundListener)listener).writeAudioData(trimBuffer, 0, totalRead);
+                    }
                 }
             }
         }
     }
-
-    public synchronized void addListener(SpectrumSoundListener listener) {
-        listeners.add(listener);
-        sourceDataLine.addLineListener(listener);
+    
+    public synchronized void addListener(final SpectrumSoundListener listener) {
+        this.listeners.add(listener);
+        this.sourceDataLine.addLineListener(listener);
     }
-
-    public synchronized void removeListener(SpectrumSoundListener listener) {
-        listeners.remove(listener);
-        sourceDataLine.removeLineListener(listener);
+    
+    public synchronized void removeListener(final SpectrumSoundListener listener) {
+        this.listeners.remove(listener);
+        this.sourceDataLine.removeLineListener(listener);
     }
 }

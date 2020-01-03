@@ -1,40 +1,62 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
 package NeonFall.Scene;
 
+import org.joml.Vector3f;
 import NeonFall.Rendering.Camera;
 import NeonFall.Rendering.Renderer;
-import org.joml.Vector3f;
 
-/**
- * Usage:
- * Author: lbald
- * Last Update: 28.12.2015
- */
-public abstract class Scene {
+public abstract class Scene
+{
 
-    public enum SCENE_TYPE {MAINMENU, GAME, HIGHSCORE, CREDITS, INTRO}
+    public enum SCENE_TYPE
+    {
+        MAINMENU,
+        GAME,
+        HIGHSCORE,
+        CREDITS,
+        INTRO
+    }
 
-    protected Renderer renderer;
+    protected static Renderer renderer;
     protected Camera camera;
-
-    protected Scene() {}
-
-    public Scene(Vector3f camPos, Vector3f rotation, Vector3f up) {
-        camera = new Camera(camPos, rotation, up);
-        renderer = new Renderer(camera);
+    
+    protected Scene() {
     }
+    
+    public Scene(final Vector3f camPos, final Vector3f rotation, final Vector3f up) {
+        this.camera = new Camera(camPos, rotation, up);
 
+        if(renderer == null) {
+            this.renderer = new Renderer(this.camera);
+        } else {
+            this.renderer.setCamera(this.camera);
+        }
+    }
+    
     public void render() {
-        renderer.renderScene(this);
+        this.renderer.renderScene(this);
     }
-
+    
     public void draw() {
-        drawLights();
-        drawNoneLightEntities();
+        this.drawLights();
+        this.drawNoneLightEntities();
+        this.drawGUI();
     }
-
+    
+    public void resize(final int width, final int height) {
+        this.camera.resize();
+    }
+    
     public abstract void drawLights();
+    
     public abstract void drawNoneLightEntities();
-    public abstract void update(float delta);
-    public abstract void resize(int width, int height);
+    
+    public abstract void drawGUI();
+    
+    public abstract void update(final float p0);
+    
     public abstract void destroy();
 }

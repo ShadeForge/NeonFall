@@ -1,78 +1,73 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
 package NeonFall.Scene.GUI;
 
-import NeonFall.Rendering.Camera;
 import NeonFall.Rendering.Renderer;
-import NeonFall.Resources.Sounds.SpectrumSoundListener;
+import java.util.Iterator;
 import org.joml.Vector3f;
-
+import NeonFall.Rendering.Camera;
 import java.util.LinkedList;
+import NeonFall.Resources.Sounds.SpectrumSoundListener;
 
-/**
- * Usage:
- * Author: lbald
- * Last Update: 13.01.2016
- */
-public class SpectrumButton extends Button {
-
+public class SpectrumButton extends Button
+{
     private static final int MAX_LAST_VALUES = 16;
-    private static final float TRANS_SPEED = 20f;
-
+    private static final float TRANS_SPEED = 20.0f;
     private SpectrumSoundListener listener;
     private LinkedList<Double> lastValues;
-
-    public SpectrumButton(String caption, Camera camera, SpectrumSoundListener listener) {
+    
+    public SpectrumButton(final String caption, final Camera camera, final SpectrumSoundListener listener) {
         super(caption, camera);
         this.listener = listener;
-
-        lastValues = new LinkedList<>();
-        lastValues.add(0d);
+        (this.lastValues = new LinkedList<Double>()).add(0.0);
     }
-
-    public void update(float delta) {
+    
+    @Override
+    public void update(final float delta) {
         super.update(delta);
-
-        updateLastValues();
-        Vector3f diffuse = getMaterial().getDiffuse();
-        float should;
-        double testValue = lastValues.getFirst();
-        double average = 0;
-        for (Double lastValue : lastValues) {
+        this.updateLastValues();
+        final Vector3f diffuse = this.getMaterial().getDiffuse();
+        final double testValue = this.lastValues.getFirst();
+        double average = 0.0;
+        for (final Double lastValue : this.lastValues) {
             average += lastValue;
         }
-        average /= MAX_LAST_VALUES;
-
-        if(testValue > average)
-            should = 1;
-        else
+        average /= 16.0;
+        float should;
+        if (testValue > average) {
+            should = 1.0f;
+        }
+        else {
             should = 0.25f;
-
-        //should = testValue / 32f;
-        float difference = should - diffuse.y;
-        diffuse.y += ((difference * delta) * TRANS_SPEED);
-        if(diffuse.y > 1.0f)
-            diffuse.y = 1;
+        }
+        final float difference = should - diffuse.y;
+        final Vector3f vector3f = diffuse;
+        vector3f.y += difference * delta * 20.0f;
+        if (diffuse.y > 1.0f) {
+            diffuse.y = 1.0f;
+        }
     }
-
+    
     private void updateLastValues() {
-        double[] values = listener.getFreqTable();
-        double testValue = 0;
+        final double[] values = this.listener.getFreqTable();
+        double testValue = 0.0;
         if (values != null) {
-            for (double value : values)
+            for (final double value : values) {
                 testValue += value;
-
-            if(testValue!=lastValues.getFirst()) {
-                lastValues.addFirst(testValue);
-
-                if(lastValues.size() > MAX_LAST_VALUES) {
-                    lastValues.removeLast();
+            }
+            if (testValue != this.lastValues.getFirst()) {
+                this.lastValues.addFirst(testValue);
+                if (this.lastValues.size() > 16) {
+                    this.lastValues.removeLast();
                 }
             }
         }
     }
-
+    
     @Override
-    public void draw(Renderer renderer) {
+    public void draw(final Renderer renderer) {
         super.draw(renderer);
     }
-
 }

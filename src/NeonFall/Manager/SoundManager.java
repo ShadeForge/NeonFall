@@ -1,71 +1,67 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
 package NeonFall.Manager;
 
+import NeonFall.Resources.Sounds.SpectrumSoundThread;
+import javax.sound.sampled.LineListener;
+import java.util.ArrayList;
 import NeonFall.Resources.Sounds.MusicPlayer;
 import NeonFall.Resources.Sounds.SoundThread;
-import NeonFall.Resources.Sounds.SpectrumSoundListener;
-import NeonFall.Resources.Sounds.SpectrumSoundThread;
-
-import javax.sound.sampled.LineListener;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Usage:
- * Author: lbald
- * Last Update: 08.01.2016
- */
-public class SoundManager {
-
+public class SoundManager
+{
     private static HashMap<Integer, SoundThread> soundThreads;
     private static int currentID = -1;
     public static MusicPlayer musicPlayer;
-
+    
     public static void init() {
-        soundThreads = new HashMap<>();
-        musicPlayer = new MusicPlayer();
+        SoundManager.soundThreads = new HashMap<Integer, SoundThread>();
+        SoundManager.musicPlayer = new MusicPlayer();
     }
-
-    public static int playSound(String path, boolean repeat) {
-        currentID++;
-        SoundThread soundThread = ResourceManager.getSound(path).playSound(repeat ? SoundThread.REPEAT : SoundThread.PLAY, currentID);
-        soundThreads.put(currentID, soundThread);
-        (new Thread(soundThread)).start();
-        return currentID;
+    
+    public static int playSound(final String path, final boolean repeat) {
+        ++SoundManager.currentID;
+        final SoundThread soundThread = ResourceManager.getSound(path).playSound(repeat ? 2 : 1, SoundManager.currentID);
+        SoundManager.soundThreads.put(SoundManager.currentID, soundThread);
+        new Thread(soundThread).start();
+        return SoundManager.currentID;
     }
-
-    public static int playSpectrumSound(String path, ArrayList<LineListener> listeners, boolean repeat) {
-        currentID++;
-        SoundThread soundThread = ResourceManager.getSound(path).playSound(repeat ? SoundThread.REPEAT : SoundThread.PLAY, currentID);
-        SpectrumSoundThread spectrumSoundThread = new SpectrumSoundThread(soundThread, listeners, currentID);
-        soundThreads.put(currentID, spectrumSoundThread);
-        (new Thread(spectrumSoundThread)).start();
-        return currentID;
+    
+    public static int playSpectrumSound(final String path, final ArrayList<LineListener> listeners, final boolean repeat) {
+        ++SoundManager.currentID;
+        final SoundThread soundThread = ResourceManager.getSound(path).playSound(repeat ? 2 : 1, SoundManager.currentID);
+        final SpectrumSoundThread spectrumSoundThread = new SpectrumSoundThread(soundThread, listeners, SoundManager.currentID);
+        SoundManager.soundThreads.put(SoundManager.currentID, spectrumSoundThread);
+        new Thread(spectrumSoundThread).start();
+        return SoundManager.currentID;
     }
-
-    public static int playMusic(String path, ArrayList<LineListener> listeners, boolean repeat) {
-        currentID++;
-        SoundThread soundThread = ResourceManager.getSound(path).playSound(repeat ? SoundThread.REPEAT : SoundThread.PLAY, currentID);
-        SpectrumSoundThread spectrumSoundThread = new SpectrumSoundThread(soundThread, listeners, currentID);
-        soundThreads.put(currentID, spectrumSoundThread);
-        (new Thread(spectrumSoundThread)).start();
-        return currentID;
+    
+    public static int playMusic(final String path, final ArrayList<LineListener> listeners, final boolean repeat) {
+        ++SoundManager.currentID;
+        final SoundThread soundThread = ResourceManager.getSound(path).playSound(repeat ? 2 : 1, SoundManager.currentID);
+        final SpectrumSoundThread spectrumSoundThread = new SpectrumSoundThread(soundThread, listeners, SoundManager.currentID);
+        SoundManager.soundThreads.put(SoundManager.currentID, spectrumSoundThread);
+        new Thread(spectrumSoundThread).start();
+        return SoundManager.currentID;
     }
-
-    public static void stopSound(int ID) {
-        soundThreads.get(ID).stop();
+    
+    public static void stopSound(final int ID) {
+        SoundManager.soundThreads.get(ID).stop();
     }
-
-    public static SoundThread getSoundThread(int ID) {
-        return soundThreads.get(ID);
+    
+    public static SoundThread getSoundThread(final int ID) {
+        return SoundManager.soundThreads.get(ID);
     }
-
-    public static void destroySoundThread(int ID) {
-        soundThreads.remove(ID);
+    
+    public static void destroySoundThread(final int ID) {
+        SoundManager.soundThreads.remove(ID);
     }
-
+    
     public static void destroy() {
-        soundThreads.values().forEach(SoundThread::stop);
-        musicPlayer.destroy();
+        SoundManager.soundThreads.values().forEach(SoundThread::stop);
+        SoundManager.musicPlayer.destroy();
     }
 }

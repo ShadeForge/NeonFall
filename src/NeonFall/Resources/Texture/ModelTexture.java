@@ -1,14 +1,18 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
 package NeonFall.Resources.Texture;
 
-public class ModelTexture {
-
+public class ModelTexture
+{
     private int textureID;
-
-    public ModelTexture(int id){
+    
+    public ModelTexture(final int id) {
         this.textureID = id;
     }
-
+    
     public int getTextureID() {
-        return textureID;
+        return this.textureID;
     }
 }

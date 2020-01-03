@@ -1,42 +1,32 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
 package NeonFall.Resources.Sounds;
 
-import com.sun.media.sound.FFT;
-
+import java.util.List;
+import java.util.ArrayList;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
-import javax.sound.sampled.SourceDataLine;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
+import com.sun.media.sound.FFT;
+import java.nio.ByteBuffer;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.LineListener;
 
-/**
- * Usage:
- * Author: lbald
- * Last Update: 09.01.2016
- */
-public class SpectrumSoundListener implements LineListener, Runnable {
-
+public class SpectrumSoundListener implements LineListener, Runnable
+{
     private static final int MAX_LAST_VALUES = 16;
-    private static final float TRANS_SPEED = 20f;
-
-    private class Band {
-        private int distribution;
-        private Band(int distribution) {
-            this.distribution = distribution;
-        }
-    }
-
+    private static final float TRANS_SPEED = 20.0f;
     public static final int DEFAULT_BLOCK_LENGTH = 8192;
-    public static final float DEFAULT_LINEAR_BIN_GAIN = 2.0F;
-    public static final float DEFAULT_SPECTRUM_ANALYSER_GAIN = 0.001F;
+    public static final float DEFAULT_LINEAR_BIN_GAIN = 2.0f;
+    public static final float DEFAULT_SPECTRUM_ANALYSER_GAIN = 0.001f;
     public static final int DEFAULT_SPECTRUM_ANALYSER_BAND_COUNT = 32;
-
     private SourceDataLine sourceDataLine;
     private ByteBuffer audioDataBuffer;
     private double[][] audioChannels;
-    private int blockLength = DEFAULT_BLOCK_LENGTH;
+    private int blockLength;
     private int channelCount;
     private int frameSize;
     private int sampleSizeInBits;
@@ -53,279 +43,254 @@ public class SpectrumSoundListener implements LineListener, Runnable {
     private float linearBinGain;
     private boolean isRunning;
     private LinkedList<Double> lastValues;
-    private double strength = 0;
-    private double average = 0;
-
+    private double strength;
+    private double average;
+    
+    public SpectrumSoundListener() {
+        this.blockLength = 8192;
+        this.strength = 0.0;
+        this.average = 0.0;
+    }
+    
     @Override
     public void run() {
-
-        isRunning = true;
-
-        int binNum, topBinNum;
+        this.isRunning = true;
         int bottomBinNum = 0;
-        int tempInt;
-        double tempDouble;
-        double bandMag;
-
-        while(isRunning) {
-            double[] channelSamples = averageChannels(audioChannels);
-            applyWindow(fftWindowLength, channelSamples);
-            extractData();
-            fft.transform(channelSamples);
-
+        while (this.isRunning) {
+            final double[] channelSamples = this.averageChannels(this.audioChannels);
+            this.applyWindow(this.fftWindowLength, channelSamples);
+            this.extractData();
+            this.fft.transform(channelSamples);
             synchronized (this) {
-                for (int bandNum = 0; bandNum < bandCount; bandNum++) {
-
-                    topBinNum = bandTable[bandNum].distribution;
-                    tempDouble = 0;
-                    tempInt = 0;
-
-                    for (binNum = bottomBinNum; binNum < topBinNum; binNum++) {
-                        double binMag = channelSamples[binNum];
+                for (int bandNum = 0; bandNum < this.bandCount; ++bandNum) {
+                    final int topBinNum = this.bandTable[bandNum].distribution;
+                    double tempDouble = 0.0;
+                    int tempInt = 0;
+                    for (int binNum = bottomBinNum; binNum < topBinNum; ++binNum) {
+                        final double binMag = channelSamples[binNum];
                         if (binMag > tempDouble) {
                             tempDouble = binMag;
                             tempInt = binNum;
                         }
                     }
                     bottomBinNum = topBinNum;
-
-                    bandMag = (tempDouble * binGainTable[tempInt]) * gain;
-
-                    freqTable[bandNum] = bandMag;
+                    final double bandMag = tempDouble * this.binGainTable[tempInt] * this.gain;
+                    this.freqTable[bandNum] = bandMag;
                 }
-
-                updateLastValues();
-                strength = lastValues.getFirst();
-                average = 0;
-                for (Double lastValue : lastValues) {
-                    average += lastValue;
+                this.updateLastValues();
+                this.strength = this.lastValues.getFirst();
+                this.average = 0.0;
+                for (final Double lastValue : this.lastValues) {
+                    this.average += lastValue;
                 }
-                average /= MAX_LAST_VALUES;
+                this.average /= 16.0;
             }
         }
     }
-
+    
     private void updateLastValues() {
-        double[] values = getFreqTable();
-        double testValue = 0;
+        final double[] values = this.getFreqTable();
+        double testValue = 0.0;
         if (values != null) {
-            for (double value : values)
+            for (final double value : values) {
                 testValue += value;
-
-            if(testValue!=lastValues.getFirst()) {
-                lastValues.addFirst(testValue);
-
-                if(lastValues.size() > MAX_LAST_VALUES) {
-                    lastValues.removeLast();
+            }
+            if (testValue != this.lastValues.getFirst()) {
+                this.lastValues.addFirst(testValue);
+                if (this.lastValues.size() > 16) {
+                    this.lastValues.removeLast();
                 }
             }
         }
     }
-
+    
     @Override
-    public void update(LineEvent event) {
-        LineEvent.Type type = event.getType();
-
+    public void update(final LineEvent event) {
+        final LineEvent.Type type = event.getType();
         if (type.equals(LineEvent.Type.OPEN)) {
-            open((SourceDataLine) event.getLine());
-        } else if (type.equals(LineEvent.Type.START)) {
-            start();
-        } else if (type.equals(LineEvent.Type.STOP)) {
-            stop();
-        } else if (type.equals(LineEvent.Type.CLOSE)) {
-            close();
+            this.open((SourceDataLine)event.getLine());
+        }
+        else if (type.equals(LineEvent.Type.START)) {
+            this.start();
+        }
+        else if (type.equals(LineEvent.Type.STOP)) {
+            this.stop();
+        }
+        else if (type.equals(LineEvent.Type.CLOSE)) {
+            this.close();
         }
     }
-
-    private void open(SourceDataLine sourceDataLine) {
-
+    
+    private void open(final SourceDataLine sourceDataLine) {
         this.sourceDataLine = sourceDataLine;
-        this.bandCount = DEFAULT_SPECTRUM_ANALYSER_BAND_COUNT;
-        AudioFormat audioFormat = sourceDataLine.getFormat();
-        this.audioChannels = new double[2][blockLength];
-        this.fftWindowLength = Math.min(blockLength, 2048); // If blockLength=8192 then fftWindowLength=2048
-        float fftSampleRate = sourceDataLine.getFormat().getFrameRate();
-
-        linearBinGain = DEFAULT_LINEAR_BIN_GAIN;
-        gain = DEFAULT_SPECTRUM_ANALYSER_GAIN;
-        int binCount = fftWindowLength >> 1;
-        channelCount = audioFormat.getChannels();
-        frameSize = audioFormat.getFrameSize();
-        sampleSizeInBits = audioFormat.getSampleSizeInBits();
-        channelSize = frameSize / channelCount;
-        audioSampleSize = (1 << (sampleSizeInBits - 1));
-        audioDataBuffer = ByteBuffer.allocate(sourceDataLine.getBufferSize());
-        calculateWindowCoefficients(fftWindowLength);
-        this.lastValues = new LinkedList<>();
-
-        lastValues.add(0d);
-        freqTable = new double[bandCount];
-        bandTable = createLogBandDistribution(bandCount, binCount);
-        binGainTable = createBinGainTable(binCount, fftSampleRate);
-
-        fft = new FFT(fftWindowLength, 1);
+        this.bandCount = 32;
+        final AudioFormat audioFormat = sourceDataLine.getFormat();
+        this.audioChannels = new double[2][this.blockLength];
+        this.fftWindowLength = Math.min(this.blockLength, 2048);
+        final float fftSampleRate = sourceDataLine.getFormat().getFrameRate();
+        this.linearBinGain = 2.0f;
+        this.gain = 0.0010000000474974513;
+        final int binCount = this.fftWindowLength >> 1;
+        this.channelCount = audioFormat.getChannels();
+        this.frameSize = audioFormat.getFrameSize();
+        this.sampleSizeInBits = audioFormat.getSampleSizeInBits();
+        this.channelSize = this.frameSize / this.channelCount;
+        this.audioSampleSize = (float)(1 << this.sampleSizeInBits - 1);
+        this.audioDataBuffer = ByteBuffer.allocate(sourceDataLine.getBufferSize());
+        this.calculateWindowCoefficients(this.fftWindowLength);
+        (this.lastValues = new LinkedList<Double>()).add(0.0);
+        this.freqTable = new double[this.bandCount];
+        this.bandTable = this.createLogBandDistribution(this.bandCount, binCount);
+        this.binGainTable = this.createBinGainTable(binCount, fftSampleRate);
+        this.fft = new FFT(this.fftWindowLength, 1);
     }
-
-    public Band[] createLogBandDistribution(int bandCount, int binCount)
-    {   final int       sso = 2;
-        final double    lso = 20.0D;
-
-        int hss = binCount - sso;
-
-        double o = Math.log(lso);
-        double r = (double) (bandCount - 1) / (Math.log(hss + lso) - o);
-
+    
+    public Band[] createLogBandDistribution(final int bandCount, final int binCount) {
+        final int sso = 2;
+        final double lso = 20.0;
+        final int hss = binCount - 2;
+        final double o = Math.log(20.0);
+        final double r = (bandCount - 1) / (Math.log(hss + 20.0) - o);
         int lcb = 1;
-
-        List<Band> bands = new ArrayList<>();
-        bands.add(new Band(sso));
-
-        for (int b = 0; b < hss; b++) {
-            double cb = ((Math.log((double) b + lso) - o) * r) + 1.0D;
+        final List<Band> bands = new ArrayList<Band>();
+        bands.add(new Band(2));
+        for (int b = 0; b < hss; ++b) {
+            final double cb = (Math.log(b + 20.0) - o) * r + 1.0;
             if (Math.round(cb) != lcb) {
-                bands.add(new Band(b + sso));
-                lcb = (int) Math.round(cb);
+                bands.add(new Band(b + 2));
+                lcb = (int)Math.round(cb);
             }
         }
-
         if (bands.size() < bandCount) {
-            bands.add(new Band((hss - 1) + sso));
+            bands.add(new Band(hss - 1 + 2));
         }
-
         return bands.toArray(new Band[bands.size()]);
     }
-
-
-    public double[] createBinGainTable(int binCount, float sampleRate) {
-        float[] fqt = calculateFrequencyTable(binCount, sampleRate);
-        binGainTable = new double[binCount];
-        for (int i = 0; i < binCount; i++) {
-            binGainTable[i] = (((fqt[i] / linearBinGain) + 512.0f) / 512.0f) * (linearBinGain * 1.5f);
+    
+    public double[] createBinGainTable(final int binCount, final float sampleRate) {
+        final float[] fqt = calculateFrequencyTable(binCount, sampleRate);
+        this.binGainTable = new double[binCount];
+        for (int i = 0; i < binCount; ++i) {
+            this.binGainTable[i] = (fqt[i] / this.linearBinGain + 512.0f) / 512.0f * (this.linearBinGain * 1.5f);
         }
-        return binGainTable;
+        return this.binGainTable;
     }
-
-    public static float[] calculateFrequencyTable(int spectrumLength, float sampleRate) {
-        float maxFreq = sampleRate / 2.0f;
-        float binWidth = maxFreq / spectrumLength;
-        float[] freqTable = new float[spectrumLength];
-
+    
+    public static float[] calculateFrequencyTable(final int spectrumLength, final float sampleRate) {
+        final float maxFreq = sampleRate / 2.0f;
+        final float binWidth = maxFreq / spectrumLength;
+        final float[] freqTable = new float[spectrumLength];
         int bin = 0;
         for (float binFreq = binWidth; binFreq <= maxFreq; binFreq += binWidth) {
             freqTable[bin] = binFreq;
-            bin++;
+            ++bin;
         }
         return freqTable;
     }
-
-    public void calculateWindowCoefficients(int windowLength) {
-        if (windowCoefficients == null || windowCoefficients.length != windowLength) {
-            windowCoefficients = new float[windowLength];
-            for (int k = 0; k < windowLength; k++) {
-                windowCoefficients[k] = (float) (0.54 - 0.46 * Math.cos(2.0 * java.lang.Math.PI * k / windowLength));
+    
+    public void calculateWindowCoefficients(final int windowLength) {
+        if (this.windowCoefficients == null || this.windowCoefficients.length != windowLength) {
+            this.windowCoefficients = new float[windowLength];
+            for (int k = 0; k < windowLength; ++k) {
+                this.windowCoefficients[k] = (float)(0.54 - 0.46 * Math.cos(6.283185307179586 * k / windowLength));
             }
         }
     }
-
-    public void applyWindow(int fftWindowLength, double[] audioChannels) {
-        double tempDouble;
-        for (int i = 0; i < fftWindowLength; i++) {
-            tempDouble = audioChannels[i] * windowCoefficients[i];
+    
+    public void applyWindow(final int fftWindowLength, final double[] audioChannels) {
+        for (int i = 0; i < fftWindowLength; ++i) {
+            final double tempDouble = audioChannels[i] * this.windowCoefficients[i];
             audioChannels[i] = tempDouble;
         }
     }
-
+    
     public void extractData() {
-        long lfp = sourceDataLine.getLongFramePosition();  // long frame position
-        int channelNum;
-        int sampleNum;
-        int cdp;
-        int position;
-        int bit;
-        int bytePos;
-        float signMask;
-
-        synchronized (audioDataBuffer) {
-            int offset = (int) ((lfp * frameSize) % (long) (audioDataBuffer.capacity()));
-
-            for (sampleNum = 0, position = offset; sampleNum < blockLength; sampleNum++, position += frameSize) {
-                if (position >= audioDataBuffer.capacity()) {
+        final long lfp = this.sourceDataLine.getLongFramePosition();
+        synchronized (this.audioDataBuffer) {
+            final int offset = (int)(lfp * this.frameSize % this.audioDataBuffer.capacity());
+            for (int sampleNum = 0, position = offset; sampleNum < this.blockLength; ++sampleNum, position += this.frameSize) {
+                if (position >= this.audioDataBuffer.capacity()) {
                     position = 0;
                 }
-
-                for (channelNum = 0, cdp = 0; channelNum < channelCount; channelNum++, cdp += channelSize) {
-
-                    signMask = (audioDataBuffer.get(position + cdp) & 0xFF) - 128.0F;
-
-                    for (bit = 8, bytePos = 1; bit < sampleSizeInBits; bit += 8) {
-                        signMask += audioDataBuffer.get(position + cdp + bytePos) << bit;
-                        bytePos++;
+                for (int channelNum = 0, cdp = 0; channelNum < this.channelCount; ++channelNum, cdp += this.channelSize) {
+                    float signMask = (this.audioDataBuffer.get(position + cdp) & 0xFF) - 128.0f;
+                    int bit = 8;
+                    int bytePos = 1;
+                    while (bit < this.sampleSizeInBits) {
+                        signMask += this.audioDataBuffer.get(position + cdp + bytePos) << bit;
+                        ++bytePos;
+                        bit += 8;
                     }
-
-                    audioChannels[channelNum][sampleNum] = signMask / audioSampleSize;
+                    this.audioChannels[channelNum][sampleNum] = signMask / this.audioSampleSize;
                 }
             }
         }
-        if(channelCount == 1) {
-            for (sampleNum = 0; sampleNum < blockLength; sampleNum++) {
-                audioChannels[1][sampleNum] = audioChannels[0][sampleNum];
+        if (this.channelCount == 1) {
+            for (int sampleNum = 0; sampleNum < this.blockLength; ++sampleNum) {
+                this.audioChannels[1][sampleNum] = this.audioChannels[0][sampleNum];
             }
         }
     }
-
-    public double[] averageChannels(double[][] audioChannels) {
-        int length = audioChannels[0].length;
-        int channelCount = audioChannels.length;
-        double[] outputSamples = new double[length];
-
-        for (int sampleNum = 0; sampleNum < length; sampleNum++) {
-            float sum = 0;
-            for (double[] audioChannel : audioChannels) {
-                sum += audioChannel[sampleNum];
+    
+    public double[] averageChannels(final double[][] audioChannels) {
+        final int length = audioChannels[0].length;
+        final int channelCount = audioChannels.length;
+        final double[] outputSamples = new double[length];
+        for (int sampleNum = 0; sampleNum < length; ++sampleNum) {
+            float sum = 0.0f;
+            for (final double[] audioChannel : audioChannels) {
+                sum += (float)audioChannel[sampleNum];
             }
-            outputSamples[sampleNum] = sum / (float) channelCount;
+            outputSamples[sampleNum] = sum / channelCount;
         }
-
         return outputSamples;
     }
-
-    public void writeAudioData(byte[] audioData, int offset, int length) {
-        synchronized (audioDataBuffer) {
-            if (audioDataBuffer == null) {
+    
+    public void writeAudioData(final byte[] audioData, final int offset, final int length) {
+        synchronized (this.audioDataBuffer) {
+            if (this.audioDataBuffer == null) {
                 return;
             }
-
-            if (audioDataBuffer.remaining() < length) {
-                audioDataBuffer.clear();
+            if (this.audioDataBuffer.remaining() < length) {
+                this.audioDataBuffer.clear();
             }
-            audioDataBuffer.put(audioData, offset, length);
+            this.audioDataBuffer.put(audioData, offset, length);
         }
     }
-
+    
     public synchronized double[] getFreqTable() {
-        return freqTable;
+        return this.freqTable;
     }
-
+    
     private void start() {
-        (new Thread(this)).start();
+        new Thread(this).start();
     }
-
+    
     private void stop() {
-        isRunning = false;
+        this.isRunning = false;
     }
-
+    
     private void close() {
-        isRunning = false;
-        if (audioDataBuffer != null) {
-            audioDataBuffer.clear();
+        this.isRunning = false;
+        if (this.audioDataBuffer != null) {
+            this.audioDataBuffer.clear();
         }
     }
-
+    
     public synchronized float getStrenghest() {
-        return (float)strength;
+        return (float)this.strength;
     }
-
+    
     public synchronized float getAverage() {
-        return (float)average;
+        return (float)this.average;
+    }
+    
+    private class Band
+    {
+        private int distribution;
+        
+        private Band(final int distribution) {
+            this.distribution = distribution;
+        }
     }
 }

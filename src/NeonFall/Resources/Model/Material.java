@@ -1,74 +1,82 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
 package NeonFall.Resources.Model;
 
 import org.joml.Vector3f;
 
-/**
- * Usage:
- * Author: lbald
- * Last Update: 30.12.2015
- */
-public class Material {
-    private Vector3f emission = new Vector3f(0, 0, 0);
-    private Vector3f ambient  = new Vector3f(1, 1, 1);
-    private Vector3f diffuse  = new Vector3f(1, 1, 1);
-    private Vector3f specular = new Vector3f(1, 1, 1);    
-
-    private float shininess = 1.0f;
-
-    public Material(Material material) {
+public class Material
+{
+    private Vector3f emission;
+    private Vector3f ambient;
+    private Vector3f diffuse;
+    private Vector3f specular;
+    private float shininess;
+    
+    public Material(final Material material) {
+        this.emission = new Vector3f(0.0f, 0.0f, 0.0f);
+        this.ambient = new Vector3f(1.0f, 1.0f, 1.0f);
+        this.diffuse = new Vector3f(1.0f, 1.0f, 1.0f);
+        this.specular = new Vector3f(1.0f, 1.0f, 1.0f);
+        this.shininess = 1.0f;
         this.ambient = new Vector3f(material.ambient);
         this.emission = new Vector3f(material.emission);
         this.diffuse = new Vector3f(material.diffuse);
         this.specular = new Vector3f(material.specular);
         this.shininess = material.shininess;
     }
-
-    public Material(Vector3f emission, Vector3f ambient,  Vector3f diffuse, Vector3f specular, float shininess) {
-        this.emission  = emission;
-        this.ambient   = ambient;
-        this.diffuse	   = diffuse;
-        this.specular  = specular;
+    
+    public Material(final Vector3f emission, final Vector3f ambient, final Vector3f diffuse, final Vector3f specular, final float shininess) {
+        this.emission = new Vector3f(0.0f, 0.0f, 0.0f);
+        this.ambient = new Vector3f(1.0f, 1.0f, 1.0f);
+        this.diffuse = new Vector3f(1.0f, 1.0f, 1.0f);
+        this.specular = new Vector3f(1.0f, 1.0f, 1.0f);
+        this.shininess = 1.0f;
+        this.emission = emission;
+        this.ambient = ambient;
+        this.diffuse = diffuse;
+        this.specular = specular;
         this.shininess = shininess;
     }
-
-    public void setEmission(Vector3f emission) {
+    
+    public void setEmission(final Vector3f emission) {
         this.emission = emission;
     }
-
-    public void setAmbient(Vector3f ambient) {
+    
+    public void setAmbient(final Vector3f ambient) {
         this.ambient = ambient;
     }
-
-    public void setDiffuse(Vector3f diffuse) {
+    
+    public void setDiffuse(final Vector3f diffuse) {
         this.diffuse = diffuse;
     }
-
-    public void setSpecular(Vector3f specular) {
+    
+    public void setSpecular(final Vector3f specular) {
         this.specular = specular;
     }
-
-    public void setShininess(float shininess) {
+    
+    public void setShininess(final float shininess) {
         this.shininess = shininess;
     }
-
+    
     public Vector3f getEmission() {
-        return emission;
+        return this.emission;
     }
-
+    
     public Vector3f getAmbient() {
-        return ambient;
+        return this.ambient;
     }
     
     public Vector3f getDiffuse() {
-        return diffuse;
+        return this.diffuse;
     }
-
+    
     public Vector3f getSpecular() {
-        return specular;
+        return this.specular;
     }
-
+    
     public float getShininess() {
-        return shininess;
+        return this.shininess;
     }
-
 }

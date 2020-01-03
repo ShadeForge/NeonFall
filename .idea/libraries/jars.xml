@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="jars">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/jars/src.zip!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jars/PNGDecoder.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jars/mp3spi1.9.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jars/tritonus_share.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jars/jl1.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jars/lwjgl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/jars/joml-1.6.1-20150920.093049-3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

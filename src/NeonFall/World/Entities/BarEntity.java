@@ -1,104 +1,103 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
 package NeonFall.World.Entities;
 
+import java.util.Random;
+import org.joml.Vector4f;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import NeonFall.Manager.ResourceManager;
-import NeonFall.Physics.AABB;
+import org.joml.Vector2f;
 import NeonFall.Resources.Sounds.SpectrumSoundListener;
 import NeonFall.World.RoundData;
-import NeonFall.World.WorldGenerator;
-import org.joml.*;
+import org.joml.Vector3f;
+import NeonFall.Physics.AABB;
 
-import java.util.Random;
-
-/**
- * Usage:
- * Author: lbald
- * Last Update: 12.01.2016
- */
-public class BarEntity extends TexturedEntity {
-
-    private final static float WORLD_MOVE_SPEED = 25f;
-    private final static float MIN_LIGHT_STRENGTH = 0.2f;
-    private final static float MAX_LIGHT_STRENGTH = 0.5f;
-    private final static float GLOW_SPEED = 1f;
-
+public class BarEntity extends TexturedEntity
+{
+    private static final float WORLD_MOVE_SPEED = 25.0f;
+    private static final float MIN_LIGHT_STRENGTH = 0.2f;
+    private static final float MAX_LIGHT_STRENGTH = 0.5f;
+    private static final float GLOW_SPEED = 1.0f;
     private AABB boundingBox;
     private int length;
     private Vector3f position;
     private RoundData roundData;
     private SpectrumSoundListener listener;
-    private float currentGlowStrength = MIN_LIGHT_STRENGTH;
-    private float currentGlowSpeed = GLOW_SPEED;
-
-    public BarEntity(RoundData roundData, int length, Vector2f position, SpectrumSoundListener listener) {
+    private float currentGlowStrength;
+    private float currentGlowSpeed;
+    
+    public BarEntity(final RoundData roundData, final int length, final Vector2f position, final SpectrumSoundListener listener) {
         super(ResourceManager.CUBE_MODEL_FILE, ResourceManager.TEX_CUBE_FILE, randomColor());
-
-        this.position = new Vector3f(position.x, position.y, WorldGenerator.SPAWN_POSITION_Z + length / 2);
-        modelMatrix = new Matrix4f().translate(this.position.x, this.position.y, this.position.z);
-        modelMatrix.scale(0.5f, 0.5f, length);
-        Matrix3f mat = new Matrix3f().scale(0.5f, 0.5f, length);
-        boundingBox = new AABB(mat.transform(new Vector3f(-1, -1, -1)),
-                mat.transform(new Vector3f(1, 1, 1)));
+        this.currentGlowStrength = 0.2f;
+        this.currentGlowSpeed = 1.0f;
+        this.position = new Vector3f(position.x, position.y, (float)(100 + length / 2));
+        (this.modelMatrix = new Matrix4f().translate(this.position.x, this.position.y, this.position.z)).scale(0.5f, 0.5f, (float)length);
+        final Matrix3f mat = new Matrix3f().scale(0.5f, 0.5f, (float)length);
+        this.boundingBox = new AABB(mat.transform(new Vector3f(-1.0f, -1.0f, -1.0f)), mat.transform(new Vector3f(1.0f, 1.0f, 1.0f)));
         this.listener = listener;
         this.roundData = roundData;
         this.length = length;
-        boundingBox.setPosition(this.position);
+        this.boundingBox.setPosition(this.position);
         this.roundData.barEntities[(int)position.x][(int)position.y].add(this);
-        update(0);
+        this.update(0.0f);
     }
-
+    
     @Override
-    public void update(float delta) {
-        position.z -= delta * WORLD_MOVE_SPEED;
-        this.modelMatrix = new Matrix4f().translate(position.x, position.y, position.z).scale(0.5f, 0.5f, length);
-
-        if(position.z + length < WorldGenerator.DESPAWN_POSITION_Z)
-            roundData.removing.add(this);
-
-        currentGlowStrength += delta * currentGlowSpeed;
-
-        if(currentGlowStrength > MAX_LIGHT_STRENGTH) {
-            currentGlowStrength = MAX_LIGHT_STRENGTH;
-            currentGlowSpeed*=-1;
-        } else if(currentGlowStrength < MIN_LIGHT_STRENGTH) {
-            currentGlowStrength = MIN_LIGHT_STRENGTH;
-            currentGlowSpeed*=-1;
+    public void update(final float delta) {
+        final Vector3f position = this.position;
+        position.z -= delta * 25.0f;
+        this.modelMatrix = new Matrix4f().translate(this.position.x, this.position.y, this.position.z).scale(0.5f, 0.5f, (float)this.length);
+        if (this.position.z + this.length < 0.0f) {
+            this.roundData.removing.add(this);
+        }
+        this.currentGlowStrength += delta * this.currentGlowSpeed;
+        if (this.currentGlowStrength > 0.5f) {
+            this.currentGlowStrength = 0.5f;
+            this.currentGlowSpeed *= -1.0f;
+        }
+        else if (this.currentGlowStrength < 0.2f) {
+            this.currentGlowStrength = 0.2f;
+            this.currentGlowSpeed *= -1.0f;
         }
     }
-
-    public boolean isColliding(AABB box) {
-        return boundingBox.intersectAABB(box);
+    
+    public boolean isColliding(final AABB box) {
+        return this.boundingBox.intersectAABB(box);
     }
-
+    
     @Override
     public Vector4f getColor() {
-        return new Vector4f(color).mul(currentGlowStrength);
+        return new Vector4f(this.color).mul(this.currentGlowStrength);
     }
-
+    
     public Vector3f getPosition() {
-        return position;
+        return this.position;
     }
-
+    
     public int getLength() {
-        return length;
+        return this.length;
     }
-
+    
     private static Vector4f randomColor() {
-
-        Vector4f color;
-        int rand = new Random().nextInt(3);
-
-        switch(rand) {
-            case 0:
-                color = new Vector4f(0, 1, 0, 1);
+        final int rand = new Random().nextInt(3);
+        Vector4f color = null;
+        switch (rand) {
+            case 0: {
+                color = new Vector4f(0.0f, 1.0f, 0.0f, 1.0f);
                 break;
-            case 1:
-                color = new Vector4f(1, 1, 0, 1);
+            }
+            case 1: {
+                color = new Vector4f(1.0f, 1.0f, 0.0f, 1.0f);
                 break;
-            default:
-                color = new Vector4f(0, 1, 1, 1);
+            }
+            default: {
+                color = new Vector4f(0.0f, 1.0f, 1.0f, 1.0f);
                 break;
+            }
         }
-
         return color;
     }
 }

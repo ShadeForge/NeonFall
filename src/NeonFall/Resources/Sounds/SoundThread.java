@@ -1,138 +1,132 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
 package NeonFall.Resources.Sounds;
 
 import NeonFall.Manager.SoundManager;
-
-import javax.sound.sampled.*;
-import java.io.File;
+import javax.sound.sampled.LineUnavailableException;
 import java.io.IOException;
-import java.nio.ByteBuffer;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.Control;
+import javax.sound.sampled.Line;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.AudioFormat;
 import java.nio.ByteOrder;
+import javax.sound.sampled.AudioSystem;
+import java.nio.ByteBuffer;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.AudioInputStream;
+import java.io.File;
+import javax.sound.sampled.BooleanControl;
+import javax.sound.sampled.FloatControl;
 
-/**
- * Usage:
- * Author: lbald
- * Last Update: 08.01.2016
- */
-public class SoundThread implements Runnable {
-
+public class SoundThread implements Runnable
+{
     public static final int PLAY = 1;
     public static final int REPEAT = 2;
     public static final int STOP = 3;
-    protected static final int READ_BUFFER_SIZE = 4 * 1024;
-
+    protected static final int READ_BUFFER_SIZE = 4096;
     protected FloatControl gainControl;
     protected BooleanControl muteControl;
-
     protected File audioSource;
     protected int state;
-
     protected AudioInputStream audioInputStream;
     protected SourceDataLine sourceDataLine;
     protected int audioDataLength;
     protected ByteBuffer audioDataBuffer;
     protected int nBytesRead;
-
     protected int id;
-
-    public SoundThread(File audioSource, int state, int id) {
+    
+    public SoundThread(final File audioSource, final int state, final int id) {
         this.audioSource = audioSource;
         this.state = state;
         this.id = id;
     }
-
+    
     protected void init() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        destroy();
-        audioInputStream = AudioSystem.getAudioInputStream(audioSource);
-        audioDataLength = READ_BUFFER_SIZE;
-        audioDataBuffer = ByteBuffer.allocate(audioDataLength);
-        audioDataBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        nBytesRead = 0;
-
-        if(sourceDataLine != null) {
-            destroy();
+        this.destroy();
+        this.audioInputStream = AudioSystem.getAudioInputStream(this.audioSource);
+        this.audioDataLength = 4096;
+        (this.audioDataBuffer = ByteBuffer.allocate(this.audioDataLength)).order(ByteOrder.LITTLE_ENDIAN);
+        this.nBytesRead = 0;
+        if (this.sourceDataLine != null) {
+            this.destroy();
         }
-        AudioFormat audioFormat = audioInputStream.getFormat();
-        audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
-                audioFormat.getSampleRate(), 16, audioFormat.getChannels(),
-                audioFormat.getChannels()*2, audioFormat.getSampleRate(), false);
-        audioInputStream = AudioSystem.getAudioInputStream(audioFormat, audioInputStream);
-
-        DataLine.Info lineInfo = new DataLine.Info(SourceDataLine.class, audioFormat, AudioSystem.NOT_SPECIFIED);
-        sourceDataLine = (SourceDataLine) AudioSystem.getLine(lineInfo);
-        int bufferSize = sourceDataLine.getBufferSize();
-
-        sourceDataLine.open(audioFormat, bufferSize);
-
-        if (sourceDataLine.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-            gainControl = (FloatControl) sourceDataLine.getControl(FloatControl.Type.MASTER_GAIN);
+        AudioFormat audioFormat = this.audioInputStream.getFormat();
+        audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, audioFormat.getSampleRate(), 16, audioFormat.getChannels(), audioFormat.getChannels() * 2, audioFormat.getSampleRate(), false);
+        this.audioInputStream = AudioSystem.getAudioInputStream(audioFormat, this.audioInputStream);
+        final DataLine.Info lineInfo = new DataLine.Info(SourceDataLine.class, audioFormat, -1);
+        this.sourceDataLine = (SourceDataLine)AudioSystem.getLine(lineInfo);
+        final int bufferSize = this.sourceDataLine.getBufferSize();
+        this.sourceDataLine.open(audioFormat, bufferSize);
+        if (this.sourceDataLine.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+            this.gainControl = (FloatControl)this.sourceDataLine.getControl(FloatControl.Type.MASTER_GAIN);
         }
-        if (sourceDataLine.isControlSupported(BooleanControl.Type.MUTE)) {
-            muteControl = (BooleanControl) sourceDataLine.getControl(BooleanControl.Type.MUTE);
+        if (this.sourceDataLine.isControlSupported(BooleanControl.Type.MUTE)) {
+            this.muteControl = (BooleanControl)this.sourceDataLine.getControl(BooleanControl.Type.MUTE);
         }
-        sourceDataLine.start();
+        this.sourceDataLine.start();
     }
-
+    
     @Override
     public void run() {
         try {
             do {
-                init();
-                while ((state == REPEAT || state == PLAY) && nBytesRead != -1 && state != STOP) {
-                    processSound();
+                this.init();
+                while ((this.state == 2 || this.state == 1) && this.nBytesRead != -1 && this.state != 3) {
+                    this.processSound();
                 }
-            } while(state == REPEAT && state != STOP);
-            destroy();
-        } catch (IOException | LineUnavailableException | UnsupportedAudioFileException ex) {
+            } while (this.state == 2 && this.state != 3);
+            this.destroy();
+        }
+        catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
-
+    
     public synchronized void stop() {
-        state = STOP;
+        this.state = 3;
     }
-
+    
     protected void destroy() {
-        if (sourceDataLine != null) {
-            sourceDataLine.flush();
-            sourceDataLine.stop();
-            sourceDataLine.close();
-            sourceDataLine = null;
+        if (this.sourceDataLine != null) {
+            this.sourceDataLine.flush();
+            this.sourceDataLine.stop();
+            this.sourceDataLine.close();
+            this.sourceDataLine = null;
         }
-
-        if (audioInputStream != null) {
+        if (this.audioInputStream != null) {
             try {
-                audioInputStream.close();
-                audioInputStream = null;
-            } catch (IOException ex) {
+                this.audioInputStream.close();
+                this.audioInputStream = null;
+            }
+            catch (IOException ex) {
                 System.out.println("Can not close AudioInputStream.");
             }
         }
-
-        SoundManager.destroySoundThread(id);
+        SoundManager.destroySoundThread(this.id);
     }
-
+    
     protected void processSound() throws IOException {
-        int toRead = audioDataLength;
-        int totalRead = 0;
-        while (toRead > 0 && (nBytesRead = audioInputStream.read(audioDataBuffer.array(), totalRead, toRead)) != -1) {
-            totalRead += nBytesRead;
-            toRead -= nBytesRead;
-        }
+        int toRead;
+        int totalRead;
+        for (toRead = this.audioDataLength, totalRead = 0; toRead > 0 && (this.nBytesRead = this.audioInputStream.read(this.audioDataBuffer.array(), totalRead, toRead)) != -1; totalRead += this.nBytesRead, toRead -= this.nBytesRead) {}
         if (totalRead > 0) {
-            byte[] trimBuffer = audioDataBuffer.array();
+            byte[] trimBuffer = this.audioDataBuffer.array();
             if (totalRead < trimBuffer.length) {
                 trimBuffer = new byte[totalRead];
-                System.arraycopy(audioDataBuffer.array(), 0, trimBuffer, 0, totalRead);
+                System.arraycopy(this.audioDataBuffer.array(), 0, trimBuffer, 0, totalRead);
             }
-            sourceDataLine.write(trimBuffer, 0, totalRead);
+            this.sourceDataLine.write(trimBuffer, 0, totalRead);
         }
     }
-
-    public void setGain(float gain) {
-        gainControl.setValue(Math.min(Math.max(gain, gainControl.getMaximum()), gainControl.getMinimum()));
+    
+    public void setGain(final float gain) {
+        this.gainControl.setValue(Math.min(Math.max(gain, this.gainControl.getMaximum()), this.gainControl.getMinimum()));
     }
-
-    public void setMute(boolean mute) {
-        muteControl.setValue(mute);
+    
+    public void setMute(final boolean mute) {
+        this.muteControl.setValue(mute);
     }
 }

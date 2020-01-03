@@ -1,29 +1,29 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
 package NeonFall.Resources.Model;
 
-/**
- * Usage:
- * Author: lbald
- * Last Update: 30.12.2015
- */
-public class RawModel {
+public class RawModel
+{
     private int vaoID;
     private int vertexCount;
-
-    public RawModel(int vaoID, int vertexCount){
+    
+    public RawModel(final int vaoID, final int vertexCount) {
         this.vaoID = vaoID;
         this.vertexCount = vertexCount;
     }
-
-    public RawModel(RawModel model){
+    
+    public RawModel(final RawModel model) {
         this.vaoID = model.getVaoID();
         this.vertexCount = model.getVertexCount();
     }
-
+    
     public int getVaoID() {
-        return vaoID;
+        return this.vaoID;
     }
-
+    
     public int getVertexCount() {
-        return vertexCount;
+        return this.vertexCount;
     }
 }

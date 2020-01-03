@@ -1,113 +1,105 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
 package NeonFall.Rendering;
 
-import org.lwjgl.opengl.GL14;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL11;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE2;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL32.*;
-import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
-
-/**
- * Usage:
- * Author: lbald
- * Last Update: 11.01.2016
- */
-public class TextureBuffer {
-
+public class TextureBuffer
+{
     protected int outTexture;
-
     protected int frameBufferID;
     protected int depthBufferID;
-
     protected int width;
     protected int height;
-
-    protected TextureBuffer() {}
-
-    public TextureBuffer(int width, int height) {
+    
+    protected TextureBuffer() {
+    }
+    
+    public TextureBuffer(final int width, final int height) {
         this.width = width;
         this.height = height;
-
-        initTextures();
-        initBuffers();
+        this.initTextures();
+        this.initBuffers();
     }
-
-    public void start(int attachment, boolean hasDepthBuffer) {
-        glViewport(0, 0, width, height);
-        if(hasDepthBuffer) {
-            glEnable(GL_DEPTH_TEST);
-            glDepthMask(true);
-        } else {
-            glDisable(GL_DEPTH_TEST);
-            glDepthMask(false);
+    
+    public void start(final int attachment, final boolean hasDepthBuffer) {
+        GL11.glViewport(0, 0, this.width, this.height);
+        if (hasDepthBuffer) {
+            GL11.glEnable(2929);
+            GL11.glDepthMask(true);
         }
-        glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
-        glBindRenderbuffer(GL_RENDERBUFFER, depthBufferID);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, outTexture, 0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        else {
+            GL11.glDisable(2929);
+            GL11.glDepthMask(false);
+        }
+        GL30.glBindFramebuffer(36160, this.frameBufferID);
+        GL30.glBindRenderbuffer(36161, this.depthBufferID);
+        GL30.glFramebufferTexture2D(36160, attachment, 3553, this.outTexture, 0);
+        GL11.glClear(16640);
     }
-
+    
     public int stop() {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glBindRenderbuffer(GL_RENDERBUFFER, 0);
-        return outTexture;
+        GL30.glBindFramebuffer(36160, 0);
+        GL30.glBindRenderbuffer(36161, 0);
+        return this.outTexture;
     }
-
-    public void activateTexture(int gl_texture) {
-        glActiveTexture(gl_texture);
-        glBindTexture(GL_TEXTURE_2D, outTexture);
+    
+    public void activateTexture(final int gl_texture) {
+        GL13.glActiveTexture(gl_texture);
+        GL11.glBindTexture(3553, this.outTexture);
     }
-
-    public void setOutTexture(int outTexture) {
+    
+    public void setOutTexture(final int outTexture) {
         this.outTexture = outTexture;
     }
-
+    
     public int getOutTexture() {
-        return outTexture;
+        return this.outTexture;
     }
-
-    public void resize(int width, int height) {
+    
+    public void resize(final int width, final int height) {
         this.width = width;
         this.height = height;
-        destroy();
-        initTextures();
-        initBuffers();
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+        this.destroy();
+        this.initTextures();
+        this.initBuffers();
+        GL30.glBindFramebuffer(36160, 0);
+        GL30.glBindRenderbuffer(36161, 0);
     }
-
+    
     public void destroy() {
-        destroyBuffers();
-        destroyTextures();
+        this.destroyBuffers();
+        this.destroyTextures();
     }
-
+    
     protected void initBuffers() {
-        frameBufferID = glGenFramebuffers();
-        depthBufferID = glGenRenderbuffers();
-        glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
-        glBindRenderbuffer(GL_RENDERBUFFER, depthBufferID);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL14.GL_DEPTH_COMPONENT24, width, height);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBufferID);
+        this.frameBufferID = GL30.glGenFramebuffers();
+        this.depthBufferID = GL30.glGenRenderbuffers();
+        GL30.glBindFramebuffer(36160, this.frameBufferID);
+        GL30.glBindRenderbuffer(36161, this.depthBufferID);
+        GL30.glRenderbufferStorage(36161, 33190, this.width, this.height);
+        GL30.glFramebufferRenderbuffer(36160, 36096, 36161, this.depthBufferID);
     }
-
+    
     protected void initTextures() {
-        outTexture = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, outTexture);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_INT, 0);
-        glBindTexture(GL_TEXTURE_2D, 0);
+        GL11.glBindTexture(3553, this.outTexture = GL11.glGenTextures());
+        GL11.glTexParameterf(3553, 10241, 9729.0f);
+        GL11.glTexImage2D(3553, 0, 32856, this.width, this.height, 0, 6408, 5124, 0L);
+        GL11.glBindTexture(3553, 0);
     }
-
+    
     protected void destroyBuffers() {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glBindRenderbuffer(GL_RENDERBUFFER, 0);
-        glDeleteFramebuffers(frameBufferID);
-        glDeleteRenderbuffers(depthBufferID);
+        GL30.glBindFramebuffer(36160, 0);
+        GL30.glBindRenderbuffer(36161, 0);
+        GL30.glDeleteFramebuffers(this.frameBufferID);
+        GL30.glDeleteRenderbuffers(this.depthBufferID);
     }
-
+    
     protected void destroyTextures() {
-        glDeleteTextures(outTexture);
+        GL11.glDeleteTextures(this.outTexture);
     }
 }

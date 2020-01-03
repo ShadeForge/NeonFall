@@ -1,106 +1,106 @@
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
 package NeonFall.Resources.Sounds;
 
-import NeonFall.Manager.ResourceManager;
 import NeonFall.Manager.SoundManager;
-
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
-import java.util.ArrayList;
 import java.util.Random;
+import javax.sound.sampled.LineEvent;
+import NeonFall.Manager.ResourceManager;
+import java.util.ArrayList;
+import javax.sound.sampled.LineListener;
 
-/**
- * Usage:
- * Author: lbald
- * Last Update: 11.01.2016
- */
-public class MusicPlayer implements LineListener {
-
+public class MusicPlayer implements LineListener
+{
     private ArrayList<LineListener> listeners;
     private SpectrumSoundThread spectrumSoundThread;
     private ArrayList<String> musicList;
-    private int currentPosition = 0;
-    private boolean isRandom = true;
-    private boolean stopped = false;
-
+    private int currentPosition;
+    private boolean isRandom;
+    private boolean stopped;
+    
     public MusicPlayer() {
-        listeners = new ArrayList<>();
-        musicList = ResourceManager.getMusicFiles();
-        listeners.add(this);
+        this.currentPosition = 0;
+        this.isRandom = true;
+        this.stopped = false;
+        this.listeners = new ArrayList<LineListener>();
+        this.musicList = ResourceManager.getMusicFiles();
+        this.listeners.add(this);
     }
-
+    
     @Override
-    public void update(LineEvent event) {
-        LineEvent.Type type = event.getType();
-
+    public void update(final LineEvent event) {
+        final LineEvent.Type type = event.getType();
         if (type.equals(LineEvent.Type.CLOSE)) {
-            if(!stopped) {
-                next();
+            if (!this.stopped) {
+                this.next();
             }
-            stopped = false;
+            this.stopped = false;
         }
     }
-
+    
     public void play() {
-
-        if(isRandom) {
-            currentPosition = new Random().nextInt(musicList.size());
+        if (this.isRandom) {
+            this.currentPosition = new Random().nextInt(this.musicList.size());
         }
-        int id = SoundManager.playSpectrumSound(musicList.get(currentPosition), listeners, false);
-        spectrumSoundThread = (SpectrumSoundThread)SoundManager.getSoundThread(id);
+        final int id = SoundManager.playSpectrumSound(this.musicList.get(this.currentPosition), this.listeners, false);
+        this.spectrumSoundThread = (SpectrumSoundThread)SoundManager.getSoundThread(id);
     }
-
+    
     public void stop() {
-        stopped = true;
-        destroy();
+        this.stopped = true;
+        this.destroy();
     }
-
+    
     public void next() {
-        destroy();
-
-        if(isRandom) {
-            currentPosition = new Random().nextInt(musicList.size());
-        } else {
-            currentPosition++;
-            if (currentPosition == musicList.size())
-                currentPosition = 0;
+        this.destroy();
+        if (this.isRandom) {
+            this.currentPosition = new Random().nextInt(this.musicList.size());
         }
-
-        int id = SoundManager.playSpectrumSound(musicList.get(currentPosition), listeners, false);
-        spectrumSoundThread = (SpectrumSoundThread)SoundManager.getSoundThread(id);
+        else {
+            ++this.currentPosition;
+            if (this.currentPosition == this.musicList.size()) {
+                this.currentPosition = 0;
+            }
+        }
+        final int id = SoundManager.playSpectrumSound(this.musicList.get(this.currentPosition), this.listeners, false);
+        this.spectrumSoundThread = (SpectrumSoundThread)SoundManager.getSoundThread(id);
     }
-
+    
     public void previous() {
-        destroy();
-
-        if(isRandom) {
-            currentPosition = new Random().nextInt(musicList.size());
-        } else {
-            currentPosition--;
-            if (currentPosition == -1)
-                currentPosition = musicList.size() - 1;
+        this.destroy();
+        if (this.isRandom) {
+            this.currentPosition = new Random().nextInt(this.musicList.size());
         }
-
-        int id = SoundManager.playSpectrumSound(musicList.get(currentPosition), listeners, false);
-        spectrumSoundThread = (SpectrumSoundThread)SoundManager.getSoundThread(id);
+        else {
+            --this.currentPosition;
+            if (this.currentPosition == -1) {
+                this.currentPosition = this.musicList.size() - 1;
+            }
+        }
+        final int id = SoundManager.playSpectrumSound(this.musicList.get(this.currentPosition), this.listeners, false);
+        this.spectrumSoundThread = (SpectrumSoundThread)SoundManager.getSoundThread(id);
     }
-
-    public void addListener(SpectrumSoundListener listener) {
-        listeners.add(listener);
-
-        if(spectrumSoundThread != null)
-            spectrumSoundThread.addListener(listener);
+    
+    public void addListener(final SpectrumSoundListener listener) {
+        this.listeners.add(listener);
+        if (this.spectrumSoundThread != null) {
+            this.spectrumSoundThread.addListener(listener);
+        }
     }
-
-    public void removeListener(SpectrumSoundListener listener) {
-        listeners.remove(listener);
-
-        if(spectrumSoundThread != null)
-           spectrumSoundThread.removeListener(listener);
+    
+    public void removeListener(final SpectrumSoundListener listener) {
+        this.listeners.remove(listener);
+        if (this.spectrumSoundThread != null) {
+            this.spectrumSoundThread.removeListener(listener);
+        }
     }
-
+    
     public void destroy() {
-        if(spectrumSoundThread != null)
-            spectrumSoundThread.stop();
-        spectrumSoundThread = null;
+        if (this.spectrumSoundThread != null) {
+            this.spectrumSoundThread.stop();
+        }
+        this.spectrumSoundThread = null;
     }
 }
