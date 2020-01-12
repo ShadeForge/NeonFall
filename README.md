@@ -11,7 +11,7 @@ more polished state which does fit my current standards.
 NeonFall is an tron-themed rhythm-game.
 The goal of this game is to fly as long as you can from track to track
 without colliding the front of a track or emptying your energy-bar.
-You have energy which will be drained if you are flying and filled when you driving on a track.
+Energy will be drained if you are flying and filled when you driving on a track.
 
 # Deferred Rendering
 Deferred Rendering is a performance improving technique which renders information like depth, color and normals
@@ -22,6 +22,7 @@ performance boost. In this project it will be used to create glowing objects.
 # Glow-Shader
 <img src="images/glow_shader.png" width=50%\>
 
+A glow-shader let objects which are illuminating light glow with an aura around them. Which is called **bleeding**.
 Basic glow-shaders renders glowing objects into a seperate texture which will be then blurred with a gaussian blur effect as example.
 After the glow-texture was blurred you map the texture onto the current scene with an additive or multiplicative approach.
 As you can see on the images there is no need in NeonFall to seperate glowing objects and non-glowing objects because every object is glowing.
