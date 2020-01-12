@@ -2,8 +2,7 @@
 This game was a 2-week-project of the CGA (computergraphics & animations) lecture and also my first time using OpenGL.
 The goal was to use the techniques we learned in the lecture and create a graphical demo or game in java.
 But my personal goal was to create a rhythm game in a tron theme and learn about deferred rendering & glow-shaders.
-The project wasn't updated since end of the project and currently I want to bring this project back to a
-more polished state which does fit my current standards.
+This game wasn't updated since the end of the project.
 
 # NeonFall
 <img src="images/neonfall.png" width=50%\>
@@ -38,6 +37,9 @@ tracks by beat but it didn't made it to the end of the project.
 # How to play
 <img src="images/controls.png" width=50%\>
 
+The goal is not collied on the front of a track and never reach zero energy.
+By colliding or reach zero energy you loose.
+The game start in flying so you need to find a track quickly since flying drains energy.
 While flying you move with the WASD-Keys. It is only possible to move in steps like on a grid.
 Move onto the sides of a track and it will land automatically.
 While driving you move with WAD-Keys. With A and D you can move around the track and even switch to other tracks nearby.
